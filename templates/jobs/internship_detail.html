@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ internship.title }} - Smart Portal{% endblock %}
+
+{% block content %}
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h3 class="fw-bold mb-1">{{ internship.title }}</h3>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-building me-1"></i>{{ internship.company.company_name }}
+                    </p>
+                </div>
+                {% if internship.is_remote %}
+                    <span class="badge bg-success fs-6">Remote</span>
+                {% else %}
+                    <span class="badge bg-primary fs-6">On-site</span>
+                {% endif %}
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <span class="badge bg-light text-dark p-2">
+                    <i class="bi bi-geo-alt me-1"></i>{{ internship.location }}
+                </span>
+                {% if internship.stipend %}
+                <span class="badge bg-light text-dark p-2">
+                    <i class="bi bi-currency-rupee me-1"></i>{{ internship.stipend }}
+                </span>
+                {% endif %}
+                {% if internship.duration %}
+                <span class="badge bg-light text-dark p-2">
+                    <i class="bi bi-clock me-1"></i>{{ internship.duration }}
+                </span>
+                {% endif %}
+                <span class="badge bg-light text-dark p-2">
+                    <i class="bi bi-calendar me-1"></i>Deadline: {{ internship.deadline }}
+                </span>
+            </div>
+
+            <h5 class="fw-bold">Internship Description</h5>
+            <p class="text-muted">{{ internship.description }}</p>
+
+            <h5 class="fw-bold mt-4">Skills Required</h5>
+            <div class="d-flex flex-wrap gap-2">
+                {% for skill in internship.skills_required.split %}
+                    <span class="badge bg-primary">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-4 mb-4">
+            <h5 class="fw-bold mb-3">Apply for this Internship</h5>
+            {% if user.is_authenticated and user.is_student %}
+                {% if has_applied %}
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle me-2"></i>You have already applied!
+                    </div>
+                {% else %}
+                    <a href="{% url 'apply_job' internship.pk %}" class="btn btn-primary w-100">
+                        <i class="bi bi-send me-2"></i>Apply Now
+                    </a>
+                {% endif %}
+            {% elif not user.is_authenticated %}
+                <p class="text-muted small">You need to login as a student to apply.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary w-100">Login to Apply</a>
+            {% else %}
+                <p class="text-muted small">Only students can apply for internships.</p>
+            {% endif %}
+        </div>
+
+        <div class="card p-4">
+            <h5 class="fw-bold mb-3">Company Info</h5>
+            <p class="fw-semibold mb-1">{{ internship.company.company_name }}</p>
+            <p class="text-muted small mb-1">
+                <i class="bi bi-tag me-1"></i>{{ internship.company.industry|default:"N/A" }}
+            </p>
+            <p class="text-muted small mb-1">
+                <i class="bi bi-geo-alt me-1"></i>{{ internship.company.location|default:"N/A" }}
+            </p>
+            <p class="text-muted small">
+                <i class="bi bi-people me-1"></i>{{ internship.company.company_size|default:"N/A" }}
+            </p>
+            {% if internship.company.website %}
+                <a href="{{ internship.company.website }}" target="_blank" class="btn btn-outline-secondary btn-sm w-100 mt-2">
+                    <i class="bi bi-globe me-1"></i>Visit Website
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

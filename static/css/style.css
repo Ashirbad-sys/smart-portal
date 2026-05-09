@@ -211,3 +211,46 @@ body {
     font-size: 0.85rem;
     text-align: center;
 }
+
+
+/* ── Navbar Links ── */
+.navbar-nav .nav-link {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 0.8rem !important;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    padding: 0.5rem;
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: #f0f2ff;
+    color: #667eea;
+}
+
+.navbar-toggler {
+    border: 1.5px solid rgba(255,255,255,0.5);
+    padding: 0.3rem 0.6rem;
+}
+
+.navbar-toggler-icon {
+    filter: invert(1);
+}

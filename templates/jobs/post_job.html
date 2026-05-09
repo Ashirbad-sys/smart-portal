@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if edit %}Edit{% else %}Post{% endif %} {{ listing_type|title }} - Smart Portal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="page-header mb-4">
+            <h2>
+                {% if edit %}
+                    <i class="bi bi-pencil-square me-2"></i>Edit {{ listing_type|title }}
+                {% else %}
+                    <i class="bi bi-plus-circle me-2"></i>Post a {{ listing_type|title }}
+                {% endif %}
+            </h2>
+            <p>Fill in the details below</p>
+        </div>
+
+        <div class="card p-4">
+            <form method="POST">
+                {% csrf_token %}
+
+                <h6 class="fw-bold text-muted mb-3 text-uppercase" style="font-size:0.75rem; letter-spacing:1px;">
+                    Basic Information
+                </h6>
+                <div class="mb-3">
+                    <label class="form-label">Job Title</label>
+                    {{ form.title }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    {{ form.description }}
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Location</label>
+                        {{ form.location }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Job Type</label>
+                        {{ form.job_type }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Skills Required</label>
+                    {{ form.skills_required }}
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Salary / Package</label>
+                        {{ form.salary }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Application Deadline</label>
+                        {{ form.deadline }}
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Status</label>
+                    {{ form.status }}
+                </div>
+
+                {% if listing_type == 'internship' %}
+                <hr>
+                <h6 class="fw-bold text-muted mb-3 text-uppercase" style="font-size:0.75rem; letter-spacing:1px;">
+                    Internship Details
+                </h6>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Stipend</label>
+                        {{ form.stipend }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Duration</label>
+                        {{ form.duration }}
+                    </div>
+                </div>
+                <div class="mb-4 form-check">
+                    {{ form.is_remote }}
+                    <label class="form-check-label ms-2">Remote Internship</label>
+                </div>
+                {% endif %}
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-2"></i>
+                        {% if edit %}Update{% else %}Post{% endif %} {{ listing_type|title }}
+                    </button>
+                    <a href="{% url 'my_postings' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
