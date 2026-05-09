@@ -4,11 +4,77 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-12">
-        <h2 class="fw-bold">Welcome, {{ user.username }}! 👋</h2>
-        <p class="text-muted">You are logged in as a <strong>Company</strong></p>
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold">Welcome, {{ user.username }}! 👋</h2>
+            <p class="text-muted">You are logged in as a <strong>Company</strong></p>
+        </div>
+        <a href="{% url 'edit_company_profile' %}" class="btn btn-primary">Edit Profile</a>
     </div>
 </div>
+
+{% if profile %}
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center p-4">
+                {% if profile.logo %}
+                    <img src="{{ profile.logo.url }}" class="mb-3" width="100" height="100" style="object-fit:contain;">
+                {% else %}
+                    <div class="bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:100px;height:100px;font-size:2rem;">
+                        {{ profile.company_name|first|upper }}
+                    </div>
+                {% endif %}
+                <h5 class="fw-bold">{{ profile.company_name }}</h5>
+                <p class="text-muted small">{{ profile.industry }}</p>
+                <p class="text-muted small">{{ profile.location }}</p>
+                {% if profile.is_approved %}
+                    <span class="badge bg-success">Approved</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">Pending Approval</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Company Details</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <small class="text-muted">Company Size</small>
+                        <p class="fw-semibold">{{ profile.company_size|default:"Not set" }}</p>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <small class="text-muted">Phone</small>
+                        <p class="fw-semibold">{{ profile.phone|default:"Not set" }}</p>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <small class="text-muted">Website</small>
+                        <p class="fw-semibold">
+                            {% if profile.website %}
+                                <a href="{{ profile.website }}" target="_blank">Visit</a>
+                            {% else %}
+                                Not set
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% if profile.description %}
+                    <small class="text-muted">About</small>
+                    <p>{{ profile.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-warning mt-4">
+    Your company profile is incomplete. <a href="{% url 'edit_company_profile' %}">Complete it now</a>
+</div>
+{% endif %}
 
 <div class="row mt-4">
     <div class="col-md-4">
