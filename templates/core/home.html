@@ -3,23 +3,91 @@
 {% block title %}Home - Smart Portal{% endblock %}
 
 {% block content %}
-<div class="text-center py-5">
-    <h1 class="display-4 fw-bold text-primary">Smart Internship & Placement Portal</h1>
-    <p class="lead text-muted mt-3">Find internships, apply for jobs, and kickstart your career.</p>
-    
-    {% if user.is_authenticated %}
-        <div class="mt-4">
+
+<!-- Hero Section -->
+<div class="row align-items-center py-5">
+    <div class="col-md-6">
+        <h1 class="display-5 fw-bold" style="line-height:1.2;">
+            Find Your Dream <br>
+            <span style="background: linear-gradient(135deg, #667eea, #e94560); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Internship & Job
+            </span>
+        </h1>
+        <p class="text-muted mt-3 mb-4" style="font-size:1.1rem;">
+            Connect students with top companies. Build your career with real opportunities, track applications, and land your dream role.
+        </p>
+        {% if user.is_authenticated %}
             {% if user.is_student %}
-                <a href="{% url 'student_dashboard' %}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                <a href="{% url 'student_dashboard' %}" class="btn btn-primary btn-lg me-3">
+                    <i class="bi bi-speedometer2 me-2"></i>My Dashboard
+                </a>
             {% elif user.is_company %}
-                <a href="{% url 'company_dashboard' %}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                <a href="{% url 'company_dashboard' %}" class="btn btn-primary btn-lg me-3">
+                    <i class="bi bi-speedometer2 me-2"></i>My Dashboard
+                </a>
             {% endif %}
-        </div>
-    {% else %}
-        <div class="mt-4">
-            <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-3">Get Started</a>
-            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
-        </div>
-    {% endif %}
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-3">
+                <i class="bi bi-rocket-takeoff me-2"></i>Get Started
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg">
+                Login
+            </a>
+        {% endif %}
+    </div>
+    <div class="col-md-6 text-center d-none d-md-block">
+        <div style="font-size: 12rem; line-height:1;">🚀</div>
+    </div>
 </div>
+
+<!-- Stats Row -->
+<div class="row g-4 my-2">
+    <div class="col-md-4">
+        <div class="card stat-card stat-card-blue text-center">
+            <h1>500+</h1>
+            <p><i class="bi bi-briefcase me-1"></i>Jobs Posted</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card stat-card-green text-center">
+            <h1>1200+</h1>
+            <p><i class="bi bi-people me-1"></i>Students Registered</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card stat-card-red text-center">
+            <h1>300+</h1>
+            <p><i class="bi bi-building me-1"></i>Companies Hiring</p>
+        </div>
+    </div>
+</div>
+
+<!-- Features Row -->
+<div class="row g-4 mt-4">
+    <div class="col-12">
+        <h3 class="fw-bold text-center mb-4">Why Choose Smart Portal?</h3>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <div style="font-size:2.5rem;">🎯</div>
+            <h5 class="fw-bold mt-3">Smart Matching</h5>
+            <p class="text-muted small">Get matched with jobs that fit your skills and preferences automatically.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <div style="font-size:2.5rem;">📊</div>
+            <h5 class="fw-bold mt-3">Track Applications</h5>
+            <p class="text-muted small">Monitor every application in real time — Applied, Shortlisted, Selected.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <div style="font-size:2.5rem;">🏢</div>
+            <h5 class="fw-bold mt-3">Top Companies</h5>
+            <p class="text-muted small">Connect with verified companies actively looking for fresh talent.</p>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

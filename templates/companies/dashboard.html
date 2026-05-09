@@ -3,103 +3,132 @@
 {% block title %}Company Dashboard{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-        <div>
-            <h2 class="fw-bold">Welcome, {{ user.username }}! 👋</h2>
-            <p class="text-muted">You are logged in as a <strong>Company</strong></p>
+
+<!-- Page Header -->
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-building me-2"></i>Company Dashboard</h2>
+        <p>Welcome back, {{ user.username }}! Manage your job postings here.</p>
+    </div>
+    <a href="{% url 'edit_company_profile' %}" class="btn btn-light">
+        <i class="bi bi-pencil-square me-1"></i>Edit Profile
+    </a>
+</div>
+
+{% if not profile %}
+<div class="alert alert-warning d-flex align-items-center gap-2">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    Your company profile is incomplete.
+    <a href="{% url 'edit_company_profile' %}" class="ms-1 fw-bold">Complete it now →</a>
+</div>
+{% endif %}
+
+<!-- Stat Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card stat-card-blue text-center">
+            <h1>0</h1>
+            <p><i class="bi bi-briefcase me-1"></i>Jobs Posted</p>
         </div>
-        <a href="{% url 'edit_company_profile' %}" class="btn btn-primary">Edit Profile</a>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card stat-card-green text-center">
+            <h1>0</h1>
+            <p><i class="bi bi-people me-1"></i>Total Applicants</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card stat-card-orange text-center">
+            <h1>0</h1>
+            <p><i class="bi bi-door-open me-1"></i>Open Positions</p>
+        </div>
     </div>
 </div>
 
+<!-- Profile Section -->
 {% if profile %}
-<div class="row mt-4">
+<div class="row g-4">
     <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body text-center p-4">
-                {% if profile.logo %}
-                    <img src="{{ profile.logo.url }}" class="mb-3" width="100" height="100" style="object-fit:contain;">
-                {% else %}
-                    <div class="bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:100px;height:100px;font-size:2rem;">
-                        {{ profile.company_name|first|upper }}
-                    </div>
-                {% endif %}
-                <h5 class="fw-bold">{{ profile.company_name }}</h5>
-                <p class="text-muted small">{{ profile.industry }}</p>
-                <p class="text-muted small">{{ profile.location }}</p>
+        <div class="card p-4 text-center h-100">
+            {% if profile.logo %}
+                <img src="{{ profile.logo.url }}" class="mb-3 mx-auto"
+                     width="90" height="90" style="object-fit:contain;">
+            {% else %}
+                <div class="avatar-circle mb-3">
+                    {{ profile.company_name|first|upper }}
+                </div>
+            {% endif %}
+            <h5 class="fw-bold">{{ profile.company_name }}</h5>
+            <p class="text-muted small mb-1">
+                <i class="bi bi-tag me-1"></i>{{ profile.industry|default:"Industry not set" }}
+            </p>
+            <p class="text-muted small mb-1">
+                <i class="bi bi-geo-alt me-1"></i>{{ profile.location|default:"Location not set" }}
+            </p>
+            <p class="text-muted small mb-3">
+                <i class="bi bi-people me-1"></i>{{ profile.company_size|default:"Size not set" }}
+            </p>
+            <div class="mt-2">
                 {% if profile.is_approved %}
-                    <span class="badge bg-success">Approved</span>
+                    <span class="badge bg-success">
+                        <i class="bi bi-check-circle me-1"></i>Approved
+                    </span>
                 {% else %}
-                    <span class="badge bg-warning text-dark">Pending Approval</span>
+                    <span class="badge bg-warning text-dark">
+                        <i class="bi bi-clock me-1"></i>Pending Approval
+                    </span>
                 {% endif %}
             </div>
+            {% if profile.website %}
+                <a href="{{ profile.website }}" target="_blank" class="btn btn-outline-secondary btn-sm mt-3">
+                    <i class="bi bi-globe me-1"></i>Visit Website
+                </a>
+            {% endif %}
         </div>
     </div>
 
     <div class="col-md-8">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h5 class="fw-bold mb-3">Company Details</h5>
-                <div class="row">
-                    <div class="col-md-6 mb-2">
-                        <small class="text-muted">Company Size</small>
-                        <p class="fw-semibold">{{ profile.company_size|default:"Not set" }}</p>
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-4">
+                <i class="bi bi-info-circle me-2"></i>Company Details
+            </h5>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3" style="background:#f8f9fc;">
+                        <small class="text-muted d-block">Phone</small>
+                        <span class="fw-semibold">{{ profile.phone|default:"Not set" }}</span>
                     </div>
-                    <div class="col-md-6 mb-2">
-                        <small class="text-muted">Phone</small>
-                        <p class="fw-semibold">{{ profile.phone|default:"Not set" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3" style="background:#f8f9fc;">
+                        <small class="text-muted d-block">Industry</small>
+                        <span class="fw-semibold">{{ profile.industry|default:"Not set" }}</span>
                     </div>
-                    <div class="col-md-6 mb-2">
-                        <small class="text-muted">Website</small>
-                        <p class="fw-semibold">
-                            {% if profile.website %}
-                                <a href="{{ profile.website }}" target="_blank">Visit</a>
-                            {% else %}
-                                Not set
-                            {% endif %}
-                        </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3" style="background:#f8f9fc;">
+                        <small class="text-muted d-block">Company Size</small>
+                        <span class="fw-semibold">{{ profile.company_size|default:"Not set" }}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3" style="background:#f8f9fc;">
+                        <small class="text-muted d-block">Location</small>
+                        <span class="fw-semibold">{{ profile.location|default:"Not set" }}</span>
                     </div>
                 </div>
                 {% if profile.description %}
-                    <small class="text-muted">About</small>
-                    <p>{{ profile.description }}</p>
+                <div class="col-md-12">
+                    <div class="p-3 rounded-3" style="background:#f8f9fc;">
+                        <small class="text-muted d-block">About Company</small>
+                        <span class="fw-semibold">{{ profile.description }}</span>
+                    </div>
+                </div>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
-
-{% else %}
-<div class="alert alert-warning mt-4">
-    Your company profile is incomplete. <a href="{% url 'edit_company_profile' %}">Complete it now</a>
-</div>
 {% endif %}
 
-<div class="row mt-4">
-    <div class="col-md-4">
-        <div class="card text-center shadow-sm">
-            <div class="card-body p-4">
-                <h1 class="text-primary">0</h1>
-                <p class="text-muted">Jobs Posted</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center shadow-sm">
-            <div class="card-body p-4">
-                <h1 class="text-success">0</h1>
-                <p class="text-muted">Total Applicants</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center shadow-sm">
-            <div class="card-body p-4">
-                <h1 class="text-warning">0</h1>
-                <p class="text-muted">Open Positions</p>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}

@@ -3,105 +3,141 @@
 {% block title %}Student Dashboard{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-        <div>
-            <h2 class="fw-bold">Welcome, {{ user.username }}! 👋</h2>
-            <p class="text-muted">You are logged in as a <strong>Student</strong></p>
+
+<!-- Page Header -->
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-mortarboard me-2"></i>Student Dashboard</h2>
+        <p>Welcome back, {{ user.username }}! Here's your overview.</p>
+    </div>
+    <a href="{% url 'edit_student_profile' %}" class="btn btn-light">
+        <i class="bi bi-pencil-square me-1"></i>Edit Profile
+    </a>
+</div>
+
+{% if not profile %}
+<div class="alert alert-warning d-flex align-items-center gap-2">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    Your profile is incomplete. 
+    <a href="{% url 'edit_student_profile' %}" class="ms-1 fw-bold">Complete it now →</a>
+</div>
+{% endif %}
+
+<!-- Stat Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card stat-card-blue text-center">
+            <h1>0</h1>
+            <p><i class="bi bi-send me-1"></i>Applied</p>
         </div>
-        <a href="{% url 'edit_student_profile' %}" class="btn btn-primary">Edit Profile</a>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card stat-card-green text-center">
+            <h1>0</h1>
+            <p><i class="bi bi-check-circle me-1"></i>Shortlisted</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card stat-card-orange text-center">
+            <h1>0</h1>
+            <p><i class="bi bi-clock me-1"></i>Pending</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card stat-card-red text-center">
+            <h1>0</h1>
+            <p><i class="bi bi-trophy me-1"></i>Selected</p>
+        </div>
     </div>
 </div>
 
+<!-- Profile Section -->
 {% if profile %}
-<div class="row mt-4">
+<div class="row g-4">
     <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body text-center p-4">
-                {% if profile.profile_photo %}
-                    <img src="{{ profile.profile_photo.url }}" class="rounded-circle mb-3" width="100" height="100" style="object-fit:cover;">
-                {% else %}
-                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:100px;height:100px;font-size:2rem;">
-                        {{ user.username|first|upper }}
-                    </div>
+        <div class="card p-4 text-center h-100">
+            {% if profile.profile_photo %}
+                <img src="{{ profile.profile_photo.url }}" class="rounded-circle mb-3 mx-auto" 
+                     width="90" height="90" style="object-fit:cover;">
+            {% else %}
+                <div class="avatar-circle mb-3">
+                    {{ user.username|first|upper }}
+                </div>
+            {% endif %}
+            <h5 class="fw-bold">{{ profile.full_name|default:user.username }}</h5>
+            <p class="text-muted small mb-1">
+                <i class="bi bi-book me-1"></i>{{ profile.degree|default:"Degree not set" }} — {{ profile.branch|default:"Branch not set" }}
+            </p>
+            <p class="text-muted small mb-3">
+                <i class="bi bi-building me-1"></i>{{ profile.college|default:"College not set" }}
+            </p>
+            <div class="d-flex justify-content-center gap-2 flex-wrap">
+                {% if profile.linkedin_link %}
+                    <a href="{{ profile.linkedin_link }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
                 {% endif %}
-                <h5 class="fw-bold">{{ profile.full_name|default:user.username }}</h5>
-                <p class="text-muted small">{{ profile.degree }} - {{ profile.branch }}</p>
-                <p class="text-muted small">{{ profile.college }}</p>
+                {% if profile.github_link %}
+                    <a href="{{ profile.github_link }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-github"></i>
+                    </a>
+                {% endif %}
+                {% if profile.portfolio_link %}
+                    <a href="{{ profile.portfolio_link }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-globe"></i>
+                    </a>
+                {% endif %}
                 {% if profile.resume %}
-                    <a href="{{ profile.resume.url }}" class="btn btn-outline-primary btn-sm" target="_blank">View Resume</a>
+                    <a href="{{ profile.resume.url }}" target="_blank" class="btn btn-primary btn-sm">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>Resume
+                    </a>
                 {% endif %}
             </div>
         </div>
     </div>
 
     <div class="col-md-8">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h5 class="fw-bold mb-3">Profile Details</h5>
-                <div class="row">
-                    <div class="col-md-6 mb-2">
-                        <small class="text-muted">CGPA</small>
-                        <p class="fw-semibold">{{ profile.cgpa|default:"Not set" }}</p>
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-4">
+                <i class="bi bi-person-lines-fill me-2"></i>Profile Details
+            </h5>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3" style="background:#f8f9fc;">
+                        <small class="text-muted d-block">CGPA</small>
+                        <span class="fw-semibold">{{ profile.cgpa|default:"Not set" }}</span>
                     </div>
-                    <div class="col-md-6 mb-2">
-                        <small class="text-muted">Phone</small>
-                        <p class="fw-semibold">{{ profile.phone|default:"Not set" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3" style="background:#f8f9fc;">
+                        <small class="text-muted d-block">Phone</small>
+                        <span class="fw-semibold">{{ profile.phone|default:"Not set" }}</span>
                     </div>
-                    <div class="col-md-6 mb-2">
-                        <small class="text-muted">Skills</small>
-                        <p class="fw-semibold">{{ profile.skills|default:"Not set" }}</p>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <small class="text-muted">Portfolio</small>
-                        <p class="fw-semibold">
-                            {% if profile.portfolio_link %}
-                                <a href="{{ profile.portfolio_link }}" target="_blank">View</a>
-                            {% else %}
-                                Not set
-                            {% endif %}
-                        </p>
+                </div>
+                <div class="col-md-12">
+                    <div class="p-3 rounded-3" style="background:#f8f9fc;">
+                        <small class="text-muted d-block mb-2">Skills</small>
+                        {% if profile.skills %}
+                            {% for skill in profile.skills.split %}
+                                <span class="badge bg-primary me-1 mb-1">{{ skill }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="fw-semibold">Not set</span>
+                        {% endif %}
                     </div>
                 </div>
                 {% if profile.bio %}
-                    <small class="text-muted">Bio</small>
-                    <p>{{ profile.bio }}</p>
+                <div class="col-md-12">
+                    <div class="p-3 rounded-3" style="background:#f8f9fc;">
+                        <small class="text-muted d-block">Bio</small>
+                        <span class="fw-semibold">{{ profile.bio }}</span>
+                    </div>
+                </div>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
-
-{% else %}
-<div class="alert alert-warning mt-4">
-    Your profile is incomplete. <a href="{% url 'edit_student_profile' %}">Complete it now</a>
-</div>
 {% endif %}
 
-<div class="row mt-4">
-    <div class="col-md-4">
-        <div class="card text-center shadow-sm">
-            <div class="card-body p-4">
-                <h1 class="text-primary">0</h1>
-                <p class="text-muted">Applications Sent</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center shadow-sm">
-            <div class="card-body p-4">
-                <h1 class="text-success">0</h1>
-                <p class="text-muted">Shortlisted</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center shadow-sm">
-            <div class="card-body p-4">
-                <h1 class="text-warning">0</h1>
-                <p class="text-muted">Pending</p>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
