@@ -12,7 +12,6 @@
 <body>
 
     <!-- Navbar -->
-    <!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="/">Smart<span>Portal</span></a>
@@ -23,59 +22,89 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- Left Links -->
-            <ul class="navbar-nav me-auto ms-4">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'home' %}">
-                        <i class="bi bi-house me-1"></i>Home
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'job_list' %}">
-                        <i class="bi bi-briefcase me-1"></i>Jobs
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'internship_list' %}">
-                        <i class="bi bi-laptop me-1"></i>Internships
-                    </a>
-                </li>
+<ul class="navbar-nav me-auto ms-4">
+    <li class="nav-item">
+        <a class="nav-link text-white" href="{% url 'home' %}">
+            <i class="bi bi-house me-1"></i>Home
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" href="{% url 'job_list' %}">
+            <i class="bi bi-briefcase me-1"></i>Jobs
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" href="{% url 'internship_list' %}">
+            <i class="bi bi-laptop me-1"></i>Internships
+        </a>
+    </li>
 
-                {% if user.is_authenticated %}
-                    {% if user.is_student %}
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'my_applications' %}">
-                                <i class="bi bi-file-earmark-text me-1"></i>My Applications
-                            </a>
-                        </li>
-                    {% endif %}
+    {% if user.is_authenticated %}
+        {% if user.is_student %}
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'my_applications' %}">
+                    <i class="bi bi-file-earmark-text me-1"></i>My Applications
+                </a>
+            </li>
+        {% endif %}
 
-                    {% if user.is_company %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-white dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                <i class="bi bi-plus-circle me-1"></i>Post
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'post_job' %}">
-                                        <i class="bi bi-briefcase me-2"></i>Post a Job
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'post_internship' %}">
-                                        <i class="bi bi-laptop me-2"></i>Post an Internship
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'my_postings' %}">
-                                        <i class="bi bi-list-ul me-2"></i>My Postings
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                {% endif %}
-            </ul>
+        {% if user.is_company %}
+            <li class="nav-item dropdown">
+                <a class="nav-link text-white dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    <i class="bi bi-plus-circle me-1"></i>Post
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'post_job' %}">
+                            <i class="bi bi-briefcase me-2"></i>Post a Job
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'post_internship' %}">
+                            <i class="bi bi-laptop me-2"></i>Post an Internship
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'my_postings' %}">
+                            <i class="bi bi-list-ul me-2"></i>My Postings
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+
+        {% if user.is_admin_user %}
+            <li class="nav-item dropdown">
+                <a class="nav-link text-white dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    <i class="bi bi-shield-lock me-1"></i>Admin
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'admin_dashboard' %}">
+                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'manage_companies' %}">
+                            <i class="bi bi-building me-2"></i>Manage Companies
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'manage_students' %}">
+                            <i class="bi bi-mortarboard me-2"></i>Manage Students
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'manage_jobs' %}">
+                            <i class="bi bi-briefcase me-2"></i>Manage Jobs
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+    {% endif %}
+</ul>
 
             <!-- Right Links -->
             <div class="d-flex align-items-center gap-3">

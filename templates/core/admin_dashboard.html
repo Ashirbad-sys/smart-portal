@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - Smart Portal{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h2><i class="bi bi-shield-lock me-2"></i>Admin Dashboard</h2>
+    <p>Overview of the entire platform</p>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4 col-6">
+        <div class="card stat-card stat-card-blue text-center">
+            <h1>{{ total_students }}</h1>
+            <p><i class="bi bi-mortarboard me-1"></i>Students</p>
+        </div>
+    </div>
+    <div class="col-md-4 col-6">
+        <div class="card stat-card stat-card-green text-center">
+            <h1>{{ total_companies }}</h1>
+            <p><i class="bi bi-building me-1"></i>Companies</p>
+        </div>
+    </div>
+    <div class="col-md-4 col-6">
+        <div class="card stat-card stat-card-orange text-center">
+            <h1>{{ total_jobs }}</h1>
+            <p><i class="bi bi-briefcase me-1"></i>Jobs</p>
+        </div>
+    </div>
+    <div class="col-md-4 col-6">
+        <div class="card stat-card stat-card-red text-center">
+            <h1>{{ total_internships }}</h1>
+            <p><i class="bi bi-laptop me-1"></i>Internships</p>
+        </div>
+    </div>
+    <div class="col-md-4 col-6">
+        <div class="card stat-card stat-card-blue text-center">
+            <h1>{{ total_applications }}</h1>
+            <p><i class="bi bi-send me-1"></i>Applications</p>
+        </div>
+    </div>
+    <div class="col-md-4 col-6">
+        <div class="card stat-card stat-card-red text-center">
+            <h1>{{ pending_companies }}</h1>
+            <p><i class="bi bi-clock me-1"></i>Pending Approvals</p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        <h5 class="fw-bold mb-3">Quick Actions</h5>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="{% url 'manage_companies' %}" class="card p-3 text-center text-decoration-none h-100">
+            <div style="font-size:2rem;">🏢</div>
+            <p class="fw-semibold mt-2 mb-0">Manage Companies</p>
+            <small class="text-muted">{{ pending_companies }} pending</small>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="{% url 'manage_students' %}" class="card p-3 text-center text-decoration-none h-100">
+            <div style="font-size:2rem;">🎓</div>
+            <p class="fw-semibold mt-2 mb-0">Manage Students</p>
+            <small class="text-muted">{{ total_students }} registered</small>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="{% url 'manage_jobs' %}" class="card p-3 text-center text-decoration-none h-100">
+            <div style="font-size:2rem;">💼</div>
+            <p class="fw-semibold mt-2 mb-0">Manage Jobs</p>
+            <small class="text-muted">{{ total_jobs }} active</small>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="/admin/" class="card p-3 text-center text-decoration-none h-100">
+            <div style="font-size:2rem;">⚙️</div>
+            <p class="fw-semibold mt-2 mb-0">Django Admin</p>
+            <small class="text-muted">Advanced settings</small>
+        </a>
+    </div>
+</div>
+
+<!-- Recent Applications -->
+<div class="card p-4">
+    <h5 class="fw-bold mb-4">
+        <i class="bi bi-clock-history me-2"></i>Recent Applications
+    </h5>
+    {% if recent_applications %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Student</th>
+                    <th>Job</th>
+                    <th>Company</th>
+                    <th>Status</th>
+                    <th>Applied</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in recent_applications %}
+                <tr>
+                    <td>
+                        <span class="fw-semibold">
+                            {{ app.student.full_name|default:app.student.user.username }}
+                        </span>
+                    </td>
+                    <td>{{ app.job.title }}</td>
+                    <td>{{ app.job.company.company_name }}</td>
+                    <td>
+                        {% if app.status == 'applied' %}
+                            <span class="badge bg-primary">Applied</span>
+                        {% elif app.status == 'shortlisted' %}
+                            <span class="badge bg-warning text-dark">Shortlisted</span>
+                        {% elif app.status == 'selected' %}
+                            <span class="badge bg-success">Selected</span>
+                        {% elif app.status == 'rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-muted small">{{ app.applied_at|date:"d M Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-muted text-center py-3">No applications yet.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

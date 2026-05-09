@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Students - Smart Portal{% endblock %}
+
+{% block content %}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-mortarboard me-2"></i>Manage Students</h2>
+        <p>View and manage all registered students</p>
+    </div>
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-light">
+        <i class="bi bi-arrow-left me-1"></i>Back
+    </a>
+</div>
+
+<div class="card p-4">
+    {% if students %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Student</th>
+                    <th>College</th>
+                    <th>Degree</th>
+                    <th>CGPA</th>
+                    <th>Skills</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>
+                        <span class="fw-semibold">
+                            {{ student.full_name|default:student.user.username }}
+                        </span>
+                        <br>
+                        <small class="text-muted">{{ student.user.email }}</small>
+                    </td>
+                    <td>{{ student.college|default:"N/A" }}</td>
+                    <td>{{ student.degree|default:"N/A" }}</td>
+                    <td>{{ student.cgpa|default:"N/A" }}</td>
+                    <td>
+                        <small>{{ student.skills|default:"N/A"|truncatechars:30 }}</small>
+                    </td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_user' student.user.pk %}"
+                              onsubmit="return confirm('Delete this student?')">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash me-1"></i>Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="text-center py-5">
+            <div style="font-size:4rem;">🎓</div>
+            <h4 class="mt-3 fw-bold">No students registered yet</h4>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

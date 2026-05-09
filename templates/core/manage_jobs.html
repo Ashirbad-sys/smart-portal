@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Jobs - Smart Portal{% endblock %}
+
+{% block content %}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-briefcase me-2"></i>Manage Jobs</h2>
+        <p>View and manage all job and internship listings</p>
+    </div>
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-light">
+        <i class="bi bi-arrow-left me-1"></i>Back
+    </a>
+</div>
+
+<div class="card p-4">
+    {% if jobs %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td class="fw-semibold">{{ job.title }}</td>
+                    <td>{{ job.company.company_name }}</td>
+                    <td>
+                        {% if job.is_internship %}
+                            <span class="badge bg-success">Internship</span>
+                        {% else %}
+                            <span class="badge bg-primary">Job</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ job.location }}</td>
+                    <td class="text-muted small">{{ job.deadline }}</td>
+                    <td>
+                        {% if job.status == 'open' %}
+                            <span class="badge bg-success">Open</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Closed</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_job_admin' job.pk %}"
+                              onsubmit="return confirm('Delete this job?')">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash me-1"></i>Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="text-center py-5">
+            <div style="font-size:4rem;">💼</div>
+            <h4 class="mt-3 fw-bold">No jobs posted yet</h4>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
