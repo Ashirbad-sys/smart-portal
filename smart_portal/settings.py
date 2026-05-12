@@ -157,15 +157,12 @@ DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='')
 
 
 # ── Production Settings ──
-import sys
-
 if not DEBUG:
-    # Whitenoise for static files
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-    # Database
     DATABASES['default'] = dj_database_url.config(
+        default=config('DATABASE_URL'),
         conn_max_age=600,
         conn_health_checks=True,
     )
