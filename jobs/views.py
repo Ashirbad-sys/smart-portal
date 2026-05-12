@@ -211,6 +211,28 @@ def update_application_status(request, pk):
         if status in ['applied', 'shortlisted', 'rejected', 'selected']:
             application.status = status
             application.save()
-            messages.success(request, 'Application status updated!')
+
+            # In-app notification
+            from core.models import Notification
+            status_messages = {
+                'shortlisted': f'🌟 You have been shortlisted for {application.job.title} at {application.job.company.company_name}!',
+                'selected': f'🎉 Congratulations! You have been selected for {application.job.title} at {application.job.company.company_name}!',
+                'rejected': f'Your application for {application.job.title} at {application.job.company.company_name} was not successful this time.',
+                'applied': f'Your application for {application.job.title} has been received.',
+            }
+            Notification.objects.create(
+                user=application.student.user,
+                message=status_messages.get(status, 'Your application status has been updated.')
+            )
+
+            # Email notification
+            from core.email_utils import send_application_status_email
+            send_application_status_email(
+                student_user=application.student.user,
+                job=application.job,
+                status=status
+            )
+
+            messages.success(request, 'Application status updated and student notified!')
 
     return redirect('view_applicants', pk=application.job.pk)

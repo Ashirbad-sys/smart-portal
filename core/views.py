@@ -5,6 +5,7 @@ from accounts.models import User
 from students.models import StudentProfile
 from companies.models import CompanyProfile
 from jobs.models import Job, Application
+from .models import Notification
 
 
 def home_view(request):
@@ -60,6 +61,17 @@ def approve_company(request, pk):
     company = get_object_or_404(CompanyProfile, pk=pk)
     company.is_approved = True
     company.save()
+
+    # In-app notification
+    Notification.objects.create(
+        user=company.user,
+        message=f'✅ Your company {company.company_name} has been approved! You can now post jobs and internships.'
+    )
+
+    # Email notification
+    from core.email_utils import send_company_approval_email
+    send_company_approval_email(company)
+
     messages.success(request, f'{company.company_name} has been approved!')
     return redirect('manage_companies')
 
@@ -101,3 +113,20 @@ def delete_user(request, pk):
         user.delete()
         messages.success(request, 'User deleted successfully!')
     return redirect('manage_students')
+
+# ── Notification Views ──
+
+@login_required
+def notifications(request):
+    notifs = Notification.objects.filter(user=request.user)
+    # Mark all as read when viewed
+    notifs.filter(is_read=False).update(is_read=True)
+    return render(request, 'core/notifications.html', {'notifications': notifs})
+
+
+@login_required
+def mark_notification_read(request, pk):
+    notif = get_object_or_404(Notification, pk=pk, user=request.user)
+    notif.is_read = True
+    notif.save()
+    return redirect('notifications')
