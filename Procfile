@@ -1,0 +1,1 @@
+web: gunicorn smart_portal.wsgi:application
