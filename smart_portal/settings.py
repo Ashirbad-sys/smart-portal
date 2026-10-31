@@ -166,3 +166,5 @@ if not DEBUG:
         conn_max_age=600,
         conn_health_checks=True,
     )
+
+EMAIL_TIMEOUT = 5
