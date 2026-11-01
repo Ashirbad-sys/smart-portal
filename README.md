@@ -1,33 +1,41 @@
 # 🚀 Smart Internship & Placement Portal
 
-A full-stack web application built with Django where students can find internships/jobs and companies can post opportunities.
+A full-stack Django web application where students find internships and jobs, companies post opportunities, and admins moderate the platform.
 
 ## 🌟 Live Demo
-[Coming soon after deployment]
+**https://smart-portal-z5md.onrender.com**
 
-## 📸 Features
+> Hosted on Render's free tier, so the first load may take 30-50 seconds while the server wakes up.
+
+**Try it with demo accounts:**
+
+| Role | Username | Password |
+|---|---|---|
+| Student | `demo_student` | `your-demo-password` |
+| Company | `demo_company` | `your-demo-password` |
+
+## 📸 Screenshots
+<!-- Add 3-4 screenshots: home page, job listing, student dashboard, admin dashboard -->
+
+## ✨ Features
 
 ### 👨‍🎓 Students
-- Register and create a profile
-- Upload resume and profile photo
-- Add skills, CGPA, portfolio links
-- Browse and search jobs & internships
-- Apply with a cover letter
-- Track application status in real time
-- In-app and email notifications
+- Register, log in, and build a profile (skills, CGPA, portfolio links)
+- Upload a resume and profile photo
+- Browse and search jobs and internships with filters
+- Apply with an optional cover letter
+- Track application status: Applied, Shortlisted, Rejected, Selected
+- In-app notifications for status changes
 
 ### 🏢 Companies
-- Register and create company profile
-- Post jobs and internships
-- View and manage applicants
-- Update application status
-- Email notifications sent automatically
+- Register and create a company profile
+- Post, edit, and delete jobs and internships
+- View applicants and update their status
 
 ### 🛡️ Admin
-- Approve or reject company registrations
-- Manage students, companies, jobs
-- View platform analytics
-- Full Django admin panel access
+- Approve or revoke company registrations
+- Manage students, companies, and listings
+- View platform analytics (users, jobs, applications)
 
 ## 🛠️ Tech Stack
 
@@ -35,48 +43,47 @@ A full-stack web application built with Django where students can find internshi
 |---|---|
 | Backend | Python, Django |
 | Frontend | HTML, CSS, Bootstrap 5 |
-| Database | SQLite (dev), PostgreSQL (prod) |
-| Storage | Django Media Files |
-| Email | Gmail SMTP |
-| Deployment | Render |
+| Database | SQLite (local), Neon PostgreSQL (production) |
+| File storage | Cloudinary (resumes, photos, logos) |
+| Email | Gmail SMTP (works locally; blocked on Render's free tier) |
+| Deployment | Render, WhiteNoise, Gunicorn |
 
 ## ⚙️ Local Setup
 
 ```bash
-# Clone the repo
 git clone https://github.com/Ashirbad-sys/smart-portal.git
 cd smart-portal
 
-# Create virtual environment
 python -m venv venv
-venv\Scripts\activate  # Windows
-source venv/bin/activate  # Mac/Linux
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # Mac/Linux
 
-# Install dependencies
 pip install -r requirements.txt
+```
 
-# Create .env file
-cp .env.example .env
-# Edit .env with your values
+Create a `.env` file in the project root (see below), then:
 
-# Run migrations
+```bash
 python manage.py migrate
-
-# Create superuser
 python manage.py createsuperuser
-
-# Run server
 python manage.py runserver
 ```
 
-## 🔐 Environment Variables
+After creating a superuser, open `/admin/`, edit your user, and set **Role** to **Admin** so the custom admin dashboard (`/admin-dashboard/`) works.
 
-Create a `.env` file with:
+## 🔐 Environment Variables
 
 ```env
 SECRET_KEY=your-secret-key
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Cloudinary (media uploads)
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+
+# Email (optional)
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
@@ -84,22 +91,26 @@ EMAIL_HOST_USER=your-gmail@gmail.com
 EMAIL_HOST_PASSWORD=your-app-password
 ```
 
+Production (`DEBUG=False`) also requires `DATABASE_URL` pointing to a PostgreSQL database.
+
 ## 📁 Project Structure
 
-myproject/
-├── accounts/        # Custom user model, auth
+```
+smart-portal/
+├── accounts/        # Custom user model, authentication
 ├── students/        # Student profiles
 ├── companies/       # Company profiles
 ├── jobs/            # Jobs, internships, applications
 ├── core/            # Home, admin dashboard, notifications
-├── templates/       # All HTML templates
-├── static/          # CSS, JS
-├── media/           # User uploads
+├── smart_portal/    # Project settings and URLs
+├── templates/       # HTML templates
+├── static/          # CSS
 └── manage.py
+```
+
+## 📝 Notes
+- Resume links are public Cloudinary URLs. Private, signed URLs would be the next step for real student data.
+- Email alerts are skipped on the live site because the free hosting tier blocks SMTP.
 
 ## 👨‍💻 Developer
-
-**Ashirbad** — Full Stack Django Developer
-
-## 📄 License
-MIT License
+**Ashirbad Pattanayak**
