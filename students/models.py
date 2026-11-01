@@ -1,3 +1,4 @@
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 from django.db import models
 from accounts.models import User
 
@@ -16,7 +17,7 @@ class StudentProfile(models.Model):
     github_link = models.URLField(blank=True)
     bio = models.TextField(blank=True)
     profile_photo = models.ImageField(upload_to='student_photos/', blank=True, null=True)
-    resume = models.FileField(upload_to='resumes/', blank=True, null=True)
+    resume = models.FileField(upload_to='resumes/', storage=RawMediaCloudinaryStorage(), blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
